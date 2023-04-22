@@ -17,6 +17,7 @@ contract JpEthStakingFundSp is Ownable, ERC20, Whitelistable {
     address public _manager;
     bool private _paused;
     uint8 private _decimals;
+    string private _documentURI;
 
     event ManagerChanged(address indexed newManager);
     event ManagerRedeem(address indexed account, address indexed to, uint256 amount);
@@ -95,7 +96,11 @@ contract JpEthStakingFundSp is Ownable, ERC20, Whitelistable {
      * @param amount redeem amount
      * @return A boolean that indicates if the operation was successful.
      */
-    function managerRedeem(address from, uint256 amount) external onlyManager returns (bool) {
+    function managerRedeem(address from, uint256 amount)
+        external 
+        onlyManager 
+        returns (bool) 
+    {
         _transfer(from, _manager, amount);
         emit ManagerRedeem(from, _manager, amount);
         return true;
@@ -107,7 +112,11 @@ contract JpEthStakingFundSp is Ownable, ERC20, Whitelistable {
      * @param amount The amount of tokens to mint. Must be less than or equal to the total supply.
      * @return A boolean that indicates if the operation was successful.
      */
-    function mint(address to, uint256 amount) external onlyManager returns (bool) {
+    function mint(address to, uint256 amount) 
+        external 
+        onlyManager 
+        returns (bool)
+    {
         require(amount <= TOTAL_SUPPLY_MAX, "JPETHStakingFundSP: mint amount exceeds total supply");
         _mint(to, amount);
         return true;
@@ -168,8 +177,23 @@ contract JpEthStakingFundSp is Ownable, ERC20, Whitelistable {
     /**
      * @dev Returns the number of decimals used to get its user representation.
     */
-   function decimals() public view virtual override returns (uint8) {
-       return _decimals;
-   }    
+    function decimals() public view virtual override returns (uint8) {
+        return _decimals;
+    } 
+    
+    /**
+     * 
+     * @param documentURI_ Uniform Resource Identifier (URI) of Document  
+     */
+    function setDocumentURI(string memory documentURI_) public onlyManager {
+        _documentURI = documentURI_;
+    }
+
+    /**
+     * @dev Returns the Uniform Resource Identifier (URI) for `tokenId` token.
+     */
+    function documentURI() public view returns(string memory){
+        return _documentURI;
+    }   
 
 }
