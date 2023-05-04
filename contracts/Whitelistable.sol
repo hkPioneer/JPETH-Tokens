@@ -15,10 +15,9 @@ contract Whitelistable is Ownable {
     event UnWhitelisted(address indexed account);
     event WhitelisterChanged(address indexed newWhitelister);
 
-    // constructor() {
-    //     _whitelister = msg.sender;
-    //     emit WhitelisterChanged(_whitelister);
-    // }
+    constructor(address whitelister) {
+        updateWhitelister(whitelister);
+    }
 
     /**
      * @dev Throws if called by any account other than the whitelister
@@ -76,7 +75,7 @@ contract Whitelistable is Ownable {
         emit UnWhitelisted(account);
     }
 
-    function updateWhitelister(address newWhitelister) external onlyOwner {
+    function updateWhitelister(address newWhitelister) public onlyOwner{
         require(
             newWhitelister != address(0),
             "Whitelistable: new whitelister is the zero address"

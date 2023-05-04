@@ -12,15 +12,16 @@ async function main() {
   const tokenDecimals = 6; 
   // input your address here 
   const manager = ""
+  const owner = ""
 
   const JpEthStakingFundSp = await hre.ethers.getContractFactory("JpEthStakingFundSp");
-  const jpEthStakingFundSp = await JpEthStakingFundSp.deploy(name, symbol, manager, tokenDecimals);;
+  const jpEthStakingFundSp = await JpEthStakingFundSp.deploy(name, symbol, manager, owner, tokenDecimals);;
 
   await jpEthStakingFundSp.deployed();
 
   console.log(
     `JpEthStakingFundSp with ${name}, ${symbol}, ${tokenDecimals} decimals and 
-    manager address ${manager} deployed to ${jpEthStakingFundSp.address}`
+    manager address ${manager} and owner address ${owner} deployed to ${jpEthStakingFundSp.address}`
   );
 }
 

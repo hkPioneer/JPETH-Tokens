@@ -11,10 +11,10 @@ const {
       const symbol = "JPETH";
       const tokenDecimals = 6;
 
-      const [owner, manager, ...otherAccounts] = await ethers.getSigners();
+      const [deployer, manager, owner, ...otherAccounts] = await ethers.getSigners();
 
       const JpEthStakingFundSp = await ethers.getContractFactory("JpEthStakingFundSp");
-      const jpEthStakingFundSp = await JpEthStakingFundSp.deploy(name, symbol, manager.address, tokenDecimals);
+      const jpEthStakingFundSp = await JpEthStakingFundSp.deploy(name, symbol, manager.address, owner.address, tokenDecimals);
 
       return { jpEthStakingFundSp, name, symbol, manager, owner, otherAccounts, tokenDecimals};
     }
@@ -39,10 +39,16 @@ const {
             expect(await jpEthStakingFundSp.getWhitelister()).to.equal(manager.address);
         });
 
+        it("Should set the right owner", async function(){
+            const { jpEthStakingFundSp, owner } = await loadFixture(deployJpEthStakingFundSpFixture);
+            expect(await jpEthStakingFundSp.owner()).to.equal(owner.address);
+        });
+
         it("Should has the right decimals", async function(){
             const { jpEthStakingFundSp, tokenDecimals } = await loadFixture(deployJpEthStakingFundSpFixture);
             expect(await jpEthStakingFundSp.decimals()).to.equal(tokenDecimals);
         });
+
     });
 
     describe("Mint", function () {

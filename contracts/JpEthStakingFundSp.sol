@@ -24,12 +24,16 @@ contract JpEthStakingFundSp is Ownable, ERC20, Whitelistable {
     event Pause();
     event Unpause();
 
-    constructor(string memory name, string memory symbol, address manager, uint8 tokenDecimals) ERC20(name, symbol) {
+    constructor(string memory name, string memory symbol, address manager, address owner, uint8 tokenDecimals) 
+        ERC20(name, symbol)
+        Whitelistable(manager) 
+    {
         require(manager != address(0), "JPETHStakingFundSP: manager is the zero address");
         _manager = manager;
-        _whitelister = manager;
         _decimals = tokenDecimals;
         _paused = true;
+        _transferOwnership(owner);
+        
     }
 
     /**
@@ -117,7 +121,7 @@ contract JpEthStakingFundSp is Ownable, ERC20, Whitelistable {
         onlyManager 
         returns (bool)
     {
-        require(amount <= TOTAL_SUPPLY_MAX, "JPETHStakingFundSP: mint amount exceeds total supply");
+        require(amount + totalSupply() <= TOTAL_SUPPLY_MAX, "JPETHStakingFundSP: mint amount exceeds total supply");
         _mint(to, amount);
         return true;
     }
@@ -128,7 +132,6 @@ contract JpEthStakingFundSp is Ownable, ERC20, Whitelistable {
      * @return A boolean that indicates if the operation was successful.
      */
     function burn(uint256 amount) external onlyManager returns (bool) {
-        require(amount <= TOTAL_SUPPLY_MAX, "JPETHStakingFundSP: burn amount exceeds total supply");
         address owner = _msgSender();
         _burn(owner, amount);
         return true;
