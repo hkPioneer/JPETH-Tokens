@@ -61,9 +61,22 @@ contract Whitelistable is Ownable {
      * @dev Adds account to whitelist
      * @param account The address to whitelist
      */
-    function addWhitelist(address account) external onlyWhitelister {
+    function addWhitelist(address account) public onlyWhitelister {
         _whitelisted[account] = true;
         emit Whitelisted(account);
+    }
+
+    /**
+     * @dev Adds accounts to whitelist
+     * @param accounts batch of addresses to whitelist
+     */
+    function addBatchToWhitelist(address[] memory accounts) public onlyWhitelister {
+        for(uint i = 0; i < accounts.length; i++){
+            require(accounts[i] != address(0), "Whitelistable: account is the zero address");
+            require(!_whitelisted[accounts[i]], "Whitelistable: account is already whitelisted");
+            _whitelisted[accounts[i]] = true;
+            emit Whitelisted(accounts[i]);
+        }
     }
 
     /**

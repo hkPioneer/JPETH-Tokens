@@ -15,7 +15,7 @@ async function main() {
   const owner = ""
 
   const JpEthStakingFundSp = await hre.ethers.getContractFactory("JpEthStakingFundSp");
-  const jpEthStakingFundSp = await JpEthStakingFundSp.deploy(name, symbol, manager, owner, tokenDecimals);;
+  const jpEthStakingFundSp = await JpEthStakingFundSp.deploy(name, symbol, manager, owner, tokenDecimals);
 
   await jpEthStakingFundSp.deployed();
 

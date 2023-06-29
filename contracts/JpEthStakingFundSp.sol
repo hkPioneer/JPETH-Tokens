@@ -13,14 +13,14 @@ import "./Whitelistable.sol";
 contract JpEthStakingFundSp is Ownable, ERC20, Whitelistable {
     //using SafeMath for uint256;
 
-    uint256 public constant TOTAL_SUPPLY_MAX = 500000;
+    uint256 public constant TOTAL_SUPPLY_MAX = 500000000000;
     address public _manager;
     bool private _paused;
     uint8 private _decimals;
     string private _documentURI;
 
     event ManagerChanged(address indexed newManager);
-    event ManagerRedeem(address indexed account, address indexed to, uint256 amount);
+//    event ManagerRedeem(address indexed account, address indexed to, uint256 amount);
     event Pause();
     event Unpause();
 
@@ -95,23 +95,24 @@ contract JpEthStakingFundSp is Ownable, ERC20, Whitelistable {
     } 
 
     /**
-     * @dev manager can redeem tokens from any address to its address
+     * @dev manager can redeem tokens from any address to fund owner address
      * @param from someone's address
      * @param amount redeem amount
      * @return A boolean that indicates if the operation was successful.
      */
-    function managerRedeem(address from, uint256 amount)
+    /* function managerRedeem(address from, uint256 amount)
         external 
         onlyManager 
         returns (bool) 
     {
-        _transfer(from, _manager, amount);
-        emit ManagerRedeem(from, _manager, amount);
+        _transfer(from, owner(), amount);
+        emit ManagerRedeem(from, owner(), amount);
         return true;
-    }
+    } */
 
+    //TODO add whitelist
     /**
-     * @dev Function to mint tokens
+     * @dev Function to mint tokens 
      * @param to The address that will receive the minted tokens.
      * @param amount The amount of tokens to mint. Must be less than or equal to the total supply.
      * @return A boolean that indicates if the operation was successful.
@@ -123,17 +124,18 @@ contract JpEthStakingFundSp is Ownable, ERC20, Whitelistable {
     {
         require(amount + totalSupply() <= TOTAL_SUPPLY_MAX, "JPETHStakingFundSP: mint amount exceeds total supply");
         _mint(to, amount);
+        addWhitelist(to);
         return true;
     }
 
     /**
      * @dev allows a minter to burn some of its own tokens
+     * @param account address of the account whose tokens will be burned
      * @param amount uint256 the amount of tokens to be burned
      * @return A boolean that indicates if the operation was successful.
      */
-    function burn(uint256 amount) external onlyManager returns (bool) {
-        address owner = _msgSender();
-        _burn(owner, amount);
+    function burn(address account, uint256 amount) external onlyManager returns (bool) {
+        _burn(account, amount);
         return true;
     }
 
