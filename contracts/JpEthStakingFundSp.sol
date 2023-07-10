@@ -71,6 +71,24 @@ contract JpEthStakingFundSp is Ownable, ERC20, Whitelistable {
         _transfer(owner, to, amount);
         return true;
     }
+    /**
+     * @notice Transfer tokens by manager
+     * @param from  Payer's address
+     * @param to    Payee's address
+     * @param amount Transfer amount
+     * @return True if successful
+     */
+    function transferByManager(address from, address to, uint256 amount) 
+        public 
+        virtual 
+        onlyManager 
+        inWhitelist(from)
+        inWhitelist(to) 
+        returns (bool) 
+    {
+        _transfer(from, to, amount);
+        return true;
+    }
 
     /**
      * @notice Transfer tokens by spending allowance
