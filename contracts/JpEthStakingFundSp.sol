@@ -13,14 +13,13 @@ import "./Whitelistable.sol";
 contract JpEthStakingFundSp is Ownable, ERC20, Whitelistable {
     //using SafeMath for uint256;
 
-    uint256 public constant TOTAL_SUPPLY_MAX = 500000000000;
+    //uint256 public constant TOTAL_SUPPLY_MAX = 500000000000;
     address public _manager;
     bool private _paused;
     uint8 private _decimals;
     string private _documentURI;
 
     event ManagerChanged(address indexed newManager);
-//    event ManagerRedeem(address indexed account, address indexed to, uint256 amount);
     event Pause();
     event Unpause();
 
@@ -112,27 +111,11 @@ contract JpEthStakingFundSp is Ownable, ERC20, Whitelistable {
         return true;
     } 
 
-    /**
-     * @dev manager can redeem tokens from any address to fund owner address
-     * @param from someone's address
-     * @param amount redeem amount
-     * @return A boolean that indicates if the operation was successful.
-     */
-    /* function managerRedeem(address from, uint256 amount)
-        external 
-        onlyManager 
-        returns (bool) 
-    {
-        _transfer(from, owner(), amount);
-        emit ManagerRedeem(from, owner(), amount);
-        return true;
-    } */
-
     //TODO add whitelist
     /**
      * @dev Function to mint tokens 
      * @param to The address that will receive the minted tokens.
-     * @param amount The amount of tokens to mint. Must be less than or equal to the total supply.
+     * @param amount The amount of tokens to mint.
      * @return A boolean that indicates if the operation was successful.
      */
     function mint(address to, uint256 amount) 
@@ -140,7 +123,6 @@ contract JpEthStakingFundSp is Ownable, ERC20, Whitelistable {
         onlyManager 
         returns (bool)
     {
-        require(amount + totalSupply() <= TOTAL_SUPPLY_MAX, "JPETHStakingFundSP: mint amount exceeds total supply");
         _mint(to, amount);
         addWhitelist(to);
         return true;
@@ -171,6 +153,7 @@ contract JpEthStakingFundSp is Ownable, ERC20, Whitelistable {
     function updateManager(address newManager) external onlyOwner {
         require(newManager != address(0), "JPETHStakingFundSP: new manager is the zero address");
         _manager = newManager;
+        updateWhitelister(_manager);
         emit ManagerChanged(_manager);
     }
 

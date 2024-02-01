@@ -78,16 +78,6 @@ const {
                 const { jpEthStakingFundSp, manager, otherAccounts } = await loadFixture(deployJpEthStakingFundSpFixture);
                 await expect(jpEthStakingFundSp.connect(manager).mint(otherAccounts[0].address,100)).to.emit(jpEthStakingFundSp, "Transfer").withArgs(ZERO_ADDRESS, otherAccounts[0].address, 100);
             });
-            it("case 1:Should not greater than the total max supply", async function(){
-                const { jpEthStakingFundSp, manager, otherAccounts } = await loadFixture(deployJpEthStakingFundSpFixture);
-                await expect(jpEthStakingFundSp.connect(manager).mint(otherAccounts[0].address,500000000001)).to.be.revertedWith("JPETHStakingFundSP: mint amount exceeds total supply");
-            });
-            it("case 2:Should not greater than the total max supply ", async function(){
-                const { jpEthStakingFundSp, manager, otherAccounts } = await loadFixture(deployJpEthStakingFundSpFixture);
-                await jpEthStakingFundSp.connect(manager).mint(otherAccounts[0].address, 400000000000);
-                await expect(jpEthStakingFundSp.connect(manager).mint(otherAccounts[1].address,100000000001)).to.be.revertedWith("JPETHStakingFundSP: mint amount exceeds total supply");
-            });
-
         });
     });
 
@@ -249,34 +239,6 @@ const {
               .to.emit(jpEthStakingFundSp, "Transfer").withArgs(otherAccounts[0].address, otherAccounts[2].address, 100);
         });
     });
-
-    /* describe("managerRedeem" , function() {
-        it("Should revert if the caller of managerRedeem: not manager", async function(){
-            const { jpEthStakingFundSp, manager, otherAccounts } = await loadFixture(deployJpEthStakingFundSpFixture);
-            await jpEthStakingFundSp.connect(manager).mint(otherAccounts[0].address,100);
-            await expect( jpEthStakingFundSp.connect(otherAccounts[1]).managerRedeem(otherAccounts[0].address,100))
-              .to.be
-              .revertedWith("JPETHStakingFundSP: caller is not the manager");
-        });
-
-        it("Should redeem", async function(){
-            const { jpEthStakingFundSp, manager, owner, otherAccounts } = await loadFixture(deployJpEthStakingFundSpFixture);
-            await jpEthStakingFundSp.connect(manager).mint(otherAccounts[0].address,100);
-            await expect( jpEthStakingFundSp.connect(manager).managerRedeem(otherAccounts[0].address,100))
-              .to.changeTokenBalances(
-                jpEthStakingFundSp,
-                [otherAccounts[0], owner],
-                [-100, 100]
-              );
-        });
-
-        it("Should emit a ManagerRedeem event", async function(){
-            const { jpEthStakingFundSp, manager, owner, otherAccounts } = await loadFixture(deployJpEthStakingFundSpFixture);
-            await jpEthStakingFundSp.connect(manager).mint(otherAccounts[0].address,100);
-            await expect( jpEthStakingFundSp.connect(manager).managerRedeem(otherAccounts[0].address,100))
-              .to.emit(jpEthStakingFundSp, "ManagerRedeem").withArgs(otherAccounts[0].address, owner.address,100);
-        });
-    }); */
 
     describe("totalSupply" , function() {
         it("case 1:Should return correct totalSupply", async function(){
